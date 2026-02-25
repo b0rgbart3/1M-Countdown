@@ -21,7 +21,8 @@ function App() {
     }
 
     try {
-      const response = await axios.get('http://localhost:5001/api/block-info');
+      // const response = await axios.get('http://localhost:5001/api/block-info');
+      const response = await axios.get('/api/block-info');
       setData(response.data);
       setLoading(false);
       setError(null);
