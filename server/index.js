@@ -11,7 +11,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../client/dist")));
 
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection:", reason);
+});
+
 app.get("/api/block-info", async (req, res) => {
+  console.log("Block height route hit");
   try {
     const response = await axios.get(
       "https://mempool.space/api/blocks/tip/height",
