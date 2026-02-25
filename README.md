@@ -66,6 +66,22 @@ The server uses Node's built-in `--watch` flag, so it automatically restarts whe
    ```
    The application will be available at `http://localhost:5173`.
 
+## Running in Production
+
+The Express server is configured to serve the React app's static build. To run the app in production:
+
+1. **Build the React client:**
+   ```bash
+   cd client && npm run build
+   ```
+   This generates static files in `client/dist/`.
+
+2. **Start the Express server:**
+   ```bash
+   cd server && npm start
+   ```
+   The server serves both the React app and API at `http://localhost:5001` (or the `PORT` value in your `.env`).
+
 ## API Endpoints
 
 ### GET `/api/block-info`
