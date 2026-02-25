@@ -3,7 +3,8 @@
 :root {
   --cyan: #00ffff;
   --cyan-glow: rgba(0, 255, 255, 0.4);
-  --orange: #5eda00;
+  --orange: #9aff4e;
+  --sync-color: #5eda00;
   --bg-black: #000000;
   --card-bg: rgba(20, 20, 20, 0.09);
   --card-border: rgba(255, 255, 255, 0.1);
@@ -13,6 +14,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  user-select: none;
 }
 
 body {
@@ -32,6 +34,81 @@ body {
   align-items: center;
   width: 100%;
   height: 100%;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+.app-container.fade-in {
+  opacity: 1;
+}
+
+/* Intro Animation Styles */
+.intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--bg-black);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  pointer-events: none;
+  transition: background-color 0.5s ease;
+}
+
+.intro-overlay.transparent-bg {
+  background-color: transparent;
+}
+
+.portal-circle {
+  width: 60px;
+  /* 30px radius * 2 */
+  height: 60px;
+  border: 8px solid black;
+  border-radius: 50%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  aspect-ratio: 1 / 1;
+  animation:
+    portalColor 0.5s forwards 0s,
+    portalExpand 5s forwards 0.5s ease-out;
+}
+
+@keyframes portalColor {
+  from {
+    border-color: black;
+  }
+
+  to {
+    border-color: var(--cyan);
+    box-shadow: 0 0 20px var(--cyan-glow);
+  }
+}
+
+@keyframes portalExpand {
+  0% {
+    width: 60px;
+    height: 60px;
+    opacity: 1;
+  }
+
+  100% {
+    width: 300vmax;
+    height: 300vmax;
+    opacity: 0;
+  }
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .countdown-card {
@@ -131,23 +208,75 @@ body {
 
 .counter-display {
   animation: pulse 3s infinite ease-in-out;
+  transition: opacity 0.3s ease;
+}
+
+.counter-display.refreshing {
+  animation: refreshAnimation 3s ease-in-out forwards;
+}
+
+@keyframes refreshAnimation {
+  0% {
+    opacity: 1;
+  }
+
+  33% {
+    opacity: 0;
+  }
+
+  66% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 1;
+    text-shadow: 0 0 20px var(--cyan-glow);
+  }
+
+  75% {
+    opacity: 0.4;
+    text-shadow: 0 0 60px var(--cyan);
+    transform: scale(1.05);
+  }
+
+  80% {
+    opacity: 1;
+    text-shadow: 0 0 20px var(--cyan-glow);
+    transform: scale(1);
+  }
+
+  85% {
+    opacity: 0.4;
+    text-shadow: 0 0 60px var(--cyan);
+    transform: scale(1.05);
+  }
+
+  90% {
+    opacity: 1;
+    text-shadow: 0 0 20px var(--cyan-glow);
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 .interval-display {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  color: white;
+  color: var(--sync-color);
   font-size: 0.8rem;
   font-family: 'Outfit', sans-serif;
-  opacity: 0.7;
+  opacity: 1;
 }
 
 .top-left-link,
 .top-right-link {
   position: absolute;
   top: 20px;
-  color: white;
+  color: var(--orange);
   text-decoration: none;
   font-family: 'Outfit', sans-serif;
   font-size: 1rem;
@@ -189,7 +318,7 @@ body {
 }
 
 .inspired-link {
-  color: white;
+  color: var(--orange);
   font-size: 1rem;
   font-family: 'Outfit', sans-serif;
   opacity: 0.7;
@@ -274,5 +403,198 @@ body {
 
   .footer-info {
     font-size: 0.8rem;
+  }
+}
+
+/* More Info Button */
+.more-info-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #aaaaaa;
+  font-size: 0.65rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-top: 15px;
+  font-family: 'Outfit', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.more-info-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: white;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  background: #111111;
+  border: 1px solid var(--card-border);
+  width: 90%;
+  max-width: 500px;
+  height: 500px;
+  max-height: 90vh;
+  /* Ensure it's not taller than the screen */
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease-out;
+  padding-bottom: 40px;
+}
+
+.modal-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1a1a1a;
+}
+
+.modal-header h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background 0.2s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-body {
+  padding: 30px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Custom scrollbar for modal body */
+.modal-body::-webkit-scrollbar {
+  width: 9px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: var(--cyan-glow);
+  border-radius: 10px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: var(--sync-color);
+}
+
+.modal-section {
+  margin-bottom: 25px;
+}
+
+.modal-section:last-child {
+  margin-bottom: 0;
+}
+
+.modal-subtitle {
+  color: var(--orange);
+  font-size: 1rem;
+  text-transform: uppercase;
+  font-family: 'Outfit', sans-serif;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.modal-text {
+  color: rgba(255, 255, 255, 0.63);
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.8;
+  font-family: 'Outfit', sans-serif;
+  margin: 0;
+  padding-right: 20px;
+}
+
+.modal-text a {
+  color: var(--orange);
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.modal-text a:hover {
+  opacity: 1;
+  text-decoration: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Modal Responsiveness */
+@media (max-width: 500px) {
+  .modal-subtitle {
+    font-size: 1rem;
+  }
+
+  .modal-text {
+    font-size: 0.9rem;
+  }
+
+  .modal-body {
+    padding: 20px;
   }
 }
