@@ -12,6 +12,7 @@ function App() {
   const [startContentFade, setStartContentFade] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [animationKey, setAnimationKey] = useState(0);
 
   const fetchBlockInfo = async (animate = false) => {
     if (animate) {
@@ -21,8 +22,10 @@ function App() {
     }
 
     try {
-      // const response = await axios.get('http://localhost:5001/api/block-info');
       const response = await axios.get('/api/block-info');
+      if (response.data?.countdown !== data.countdown) {
+        setAnimationKey(prev => prev + 1);
+      }
       setData(response.data);
       setLoading(false);
       setError(null);
@@ -95,6 +98,11 @@ function App() {
         </div>
       )}
       <div className={`app-container ${startContentFade ? 'fade-in' : ''}`}>
+        {animationKey > 0 && (
+          <div key={animationKey} className="animation-overlay">
+            <div className="expanding-ring"></div>
+          </div>
+        )}
         <a
           href="https://bartdorityportfolio.online/"
           target="_blank"
