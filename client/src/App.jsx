@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import pointerIcon from './assets/pointer.svg';
 import './App.css';
@@ -13,6 +13,7 @@ function App() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [animationKey, setAnimationKey] = useState(0);
+  const prevCountdownRef = useRef(null);
 
   const fetchBlockInfo = async (animate = false) => {
     if (animate) {
@@ -23,9 +24,11 @@ function App() {
 
     try {
       const response = await axios.get('/api/block-info');
-      if (response.data?.countdown !== data.countdown) {
+      const newCountdown = response.data?.countdown;
+      if (prevCountdownRef.current !== null && newCountdown !== prevCountdownRef.current) {
         setAnimationKey(prev => prev + 1);
       }
+      prevCountdownRef.current = newCountdown;
       setData(response.data);
       setLoading(false);
       setError(null);
