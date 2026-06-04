@@ -1,5 +1,9 @@
 # Bitcoin One Million Countdown App
 
+**Live:** [millionthblock-countdown.com](https://millionthblock-countdown.com/)
+
+![Bitcoin One Million Countdown](./countdown.webp)
+
 A full-stack application that provides a real-time countdown to the 1,000,000th Bitcoin block. The app features a premium dark-themed UI with cyan glow aesthetics, matching the provided design requirements.
 
 ## Features
